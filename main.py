@@ -15,4 +15,10 @@ def jobs():
         json_data = request.get_json()
         job_handler.addJob(json_data)
         return "Added job"
+    
+@app.route('/api/stopjob', methods=['POST'])
+def stopJob():
+    json_data = request.get_json()
+    job_handler.stopJob(json_data)
+    return "Stopped job"
         
