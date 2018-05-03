@@ -38,7 +38,7 @@ def jobThread(ff):
        pass
 
 def addJob(json):
-    globalopts = "-y -hide_banner -progress http://localhost:5000/api/progress"
+    globalopts = "-y -hide_banner -progress http://localhost:5000/api/stats/"+ json['name'],
     inputopts = inputBuilder(json)
     outputopts = outputBuilder(json)
     
