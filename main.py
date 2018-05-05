@@ -11,12 +11,17 @@ stat.initStats()
 def mainpage():
    return render_template("main.html")
 
+@app.route('/addjob')
+def addjob():
+   return render_template("add.html")
+
 @app.route('/api/jobs', methods=['GET', 'POST'])
 def jobs():
     if request.method == "GET":
-        return "Not yet implemented"
+        return jsonify(job_handler.getJobs())
     else: 
         json_data = request.get_json()
+        print("Adding job: " + str(json_data))
         job_handler.addJob(json_data)
         return "Added job"
     
@@ -25,6 +30,10 @@ def stopJob():
     json_data = request.get_json()
     job_handler.stopJob(json_data)
     return "Stopped job"
+
+@app.route('/api/stats', methods=['GET'])
+def allStats():
+    return jsonify(stat.getAllStats())
 
 @app.route('/api/stats/<jobname>', methods=['GET', 'POST'])
 def stats(jobname):

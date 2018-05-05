@@ -11,6 +11,8 @@ def outputBuilder(json):
        outputopts += " -r " + json['framerate']
     if 'vcodec' in json:
        outputopts += " -c:v " + json['vcodec']
+       if json['vcodec'] == "libaom-av1":
+           outputopts += " -strict -2"
     if 'vbitrate' in json:
        outputopts += " -b:v " + json['vbitrate']
     if 'resolution' in json:
@@ -38,7 +40,7 @@ def jobThread(ff):
        pass
 
 def addJob(json):
-    globalopts = "-y -hide_banner -progress http://localhost:5000/api/stats/"+ json['name'],
+    globalopts = "-y -hide_banner -progress http://localhost:5000/api/stats/"+ json['jobname'],
     inputopts = inputBuilder(json)
     outputopts = outputBuilder(json)
     
@@ -49,10 +51,16 @@ def addJob(json):
     )
     process = Thread(target=jobThread, args=(ffjob,))
     process.start()
-    jobs.append([json['name'], ffjob])
+    jobs.append([json, ffjob])
     print("Job added:", json)
     
 def stopJob(json):
    for job in jobs:
-       if job[0] == json['name']:
+       if job[0]['jobname'] == json['jobname']:
            job[1].process.terminate()
+
+def getJobs():
+   jobobj = []
+   for json,job in jobs:
+       jobobj.append(json)
+   return jobobj

@@ -7,7 +7,7 @@ class Stats:
    def initStats(self):
        c = self.conn.cursor()
        c.execute('''CREATE TABLE stats 
-           (jobname text PRIMARY KEY, fps text, bitrate text, total_size text, out_time text, dup_frames text, drop_frames text, speed text, progress text)''')
+           (jobName text PRIMARY KEY, fps text, bitrate text, totalSize text, uptime text, dupFrames text, dropFrames text, speed text, status text)''')
        self.conn.commit()
        
    def sqltoJson(self, cursor, row):
@@ -24,7 +24,12 @@ class Stats:
            if len(isplit) == 2:
                jobdict[isplit[0]] = isplit[1]
        c = self.conn.cursor()
-       c.execute("REPLACE INTO stats(jobname, fps, bitrate, total_size, out_time, dup_frames, drop_frames, speed, progress) VALUES ('" + jobname + "','" + jobdict['fps'] + "','" + jobdict['bitrate'] + "','" + jobdict['total_size'] + "','" + jobdict['out_time'] + "','" + jobdict['dup_frames'] + "','" + jobdict['drop_frames'] + "','" + jobdict['speed'] + "','" + jobdict['progress'] + "')")
+       status = "Unknown"
+       if jobdict['progress'] == "continue":
+           status = "Running"
+       else:
+           status = "Stopped"
+       c.execute("REPLACE INTO stats(jobName, fps, bitrate, totalSize, uptime, dupFrames, dropFrames, speed, status) VALUES ('" + jobname + "','" + jobdict['fps'] + "','" + jobdict['bitrate'] + "','" + jobdict['total_size'] + "','" + jobdict['out_time'].split('.')[0] + "','" + jobdict['dup_frames'] + "','" + jobdict['drop_frames'] + "','" + jobdict['speed'] + "','" + status + "')")
        self.conn.commit()
        
    def getStats(self, jobname):
@@ -33,5 +38,14 @@ class Stats:
       c = conn.cursor()
       c.execute("SELECT * FROM stats WHERE jobname=?", (jobname,))
       result = c.fetchone()
-      print(result)
       return result
+  
+   def getAllStats(self):
+      statsobj = {}
+      conn = self.conn
+      conn.row_factory = self.sqltoJson
+      c = conn.cursor()
+      c.execute("SELECT * FROM stats")
+      result = c.fetchall()
+      statsobj["data"] = result
+      return statsobj
