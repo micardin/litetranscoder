@@ -49,3 +49,9 @@ class Stats:
       result = c.fetchall()
       statsobj["data"] = result
       return statsobj
+  
+   def removeJob(self, jobname):
+      conn = self.conn
+      c = conn.cursor()
+      c.execute("DELETE from stats WHERE jobName = '" + jobname + "'")
+      self.conn.commit()

@@ -39,6 +39,17 @@
                     <input class="pure-input-2-3" id="input" type="text" name="input" placeholder="Enter input URL or filename" required>
                 </div>
                 <div class="pure-control-group">
+                    <label for="outputproto">Output Protocol</label>
+                    <select class="pure-input-2-3" id="outputproto" name="outputproto">
+                        <option value="file" selected>File</option>
+                        <option value="rtp">RTP</option>
+                        <option value="rtsp">RTSP</option>
+                        <option value="udp">UDP</option>
+                        <option value="sap">SAP</option>
+                        <option value="sctp">SCTP</option>
+                    </select>
+                </div>
+                <div class="pure-control-group">
                     <label for="output">Output</label>
                     <input class="pure-input-2-3" id="output" type="text" name="output" placeholder="Enter output URL or filename" required>
                 </div>

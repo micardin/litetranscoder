@@ -29,6 +29,7 @@ def jobs():
 def stopJob():
     json_data = request.get_json()
     job_handler.stopJob(json_data)
+    stat.removeJob(json_data['jobname'])
     return "Stopped job"
 
 @app.route('/api/stats', methods=['GET'])

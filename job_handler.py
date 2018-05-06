@@ -17,6 +17,15 @@ def outputBuilder(json):
        outputopts += " -b:v " + json['vbitrate']
     if 'resolution' in json:
        outputopts += " -s " + json['resolution']
+    if 'outputproto' in json:
+       if json['outputproto'] == 'rtp':
+           outputopts += " -f rtp"
+       elif json['outputproto'] == 'rtsp':
+           outputopts += " -f rtsp -muxdelay 0.1"
+       elif json['outputproto'] == 'udp' or json['outputproto'] == 'sctp':
+           outputopts += " -f mpegts"
+       elif json['outputproto'] == 'sap':
+           outputopts += " -f sap"
        
     return outputopts
     
@@ -25,7 +34,7 @@ def inputBuilder(json):
     
     if 'input_loop' in json:
        inputopts += "-stream_loop -1 "
-    if 'realtime' in json:
+    if 'realtime' in json or json['outputproto'] != "file":
        inputopts += "-re "
     
     if inputopts == "":

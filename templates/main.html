@@ -5,9 +5,11 @@
 <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 <link rel="stylesheet" href="static/side-menu.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.1/css/buttons.dataTables.min.css">
 <script src="static/ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.0.1/js/dataTables.buttons.js"></script>
 <title>Lite Transcoder</title>
 </head>
 <body>
@@ -25,9 +27,9 @@
     </div>
  </div>
  <div id="main">
-    <div class="content pure-g">
+    <div>
         <h1>Job List</h1>
-        <div class="pure-u-1-1">
+        <div>
         <table id="jobs-table" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -37,6 +39,7 @@
                     <th>Uptime</th>
                     <th>Speed</th>
                     <th>Status</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +51,7 @@
 </div>
 <script>
 $(document).ready(function() {
-    $('#jobs-table').DataTable( {
+    var table = $('#jobs-table').DataTable( {
             "ajax": "api/stats",
             "columns": [
                 { "data": "jobName" },
@@ -56,9 +59,27 @@ $(document).ready(function() {
                 { "data": "fps" },
                 { "data": "uptime" },
                 { "data": "speed" },
-                { "data": "status" }
-            ]
+                { "data": "status" },
+                { "data": null }
+            ],
+            "columnDefs": [ {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class=\"pure-button\" style=\"color: white; background: rgb(202,60,60);\">Delete</button>"
+            } ]
         } );
+        
+    $('#jobs-table tbody').on('click', 'button', function() {
+        var data = table.row( $(this).parents('tr') ).data();
+        var jsonObj = new Object();
+        jsonObj.jobname = data['jobName'];
+        $.ajax({
+            url: 'api/stopjob',
+            type: 'POST',
+            data: JSON.stringify(jsonObj),
+            contentType: "application/json"
+        });
+    } );
 
    window.setInterval(function() {
         var datatable = $('#jobs-table').DataTable();
