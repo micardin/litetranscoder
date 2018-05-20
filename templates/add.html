@@ -28,7 +28,7 @@
  <div id="main">
     <div class="content">
         <h1>Add Job</h1>
-        <form id="addform" class="pure-form pure-form-aligned">
+        <form id="addform" action="/" class="pure-form pure-form-aligned">
             <fieldset>
                 <div class="pure-control-group">
                     <label for="name">Job Name</label>
@@ -102,6 +102,9 @@ $(document).ready(function() {
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);
             }
+        })
+        .always(function() {
+            window.location.replace("/");
         });
     });
 });

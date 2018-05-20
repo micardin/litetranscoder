@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, request, jsonify
+from flask import *
 import job_handler
 from stats import Stats
 
