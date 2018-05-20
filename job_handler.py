@@ -19,7 +19,7 @@ def outputBuilder(json):
        outputopts += " -s " + json['resolution']
     if 'outputproto' in json:
        if json['outputproto'] == 'rtp':
-           outputopts += " -f rtp"
+           outputopts += " -an -f rtp"
        elif json['outputproto'] == 'rtsp':
            outputopts += " -f rtsp -muxdelay 0.1"
        elif json['outputproto'] == 'udp' or json['outputproto'] == 'sctp':
